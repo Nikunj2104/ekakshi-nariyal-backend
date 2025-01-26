@@ -6,12 +6,17 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-
-// Middleware
 app.use(express.json());
-app.use(cors());
 
-// MongoDB Connection with Desired Database and Collection Listing
+// Configure CORS
+const corsOptions = {
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+
+// MongoDB Connection
 const connectDB = async () => {
   try {
     const uri = `${process.env.MONGO_URI}`;
