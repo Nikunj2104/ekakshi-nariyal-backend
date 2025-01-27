@@ -31,7 +31,10 @@ connectDB();
 
 // Default Route
 app.get("/", (req, res) => {
-  res.status(200).send("API is working.");
+  res.status(200).send("GET API is working.");
+});
+app.post("/", (req, res) => {
+  res.status(200).send("POST API is working.");
 });
 
 // Routes
