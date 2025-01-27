@@ -31,35 +31,31 @@ router.post("/sign-up", async (req, res) => {
 });
 
 // Sign In
-router.post("/sign-in", async (req, res) => {
-  const { email, password } = req.body;
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
-  try {
-    // Find user by email
+// Usage
+router.post(
+  "/sign-in",
+  asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if password is correct
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
 
-    // Respond with token and user information
-    res.status(200).json({ token, user });
-  } catch (error) {
-    console.error("Error during sign-in:", error);
-    res
-      .status(500)
-      .json({ message: "Something went wrong", error: error.message });
-  }
-});
+    return res.status(200).json({ token, user });
+  })
+);
 
 module.exports = router;
