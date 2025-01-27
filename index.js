@@ -33,12 +33,6 @@ connectDB();
 app.get("/", (req, res) => {
   res.status(200).send("GET API is working.");
 });
-// app.post("/api/auth/sign-in", (req, res) => {
-//   res.status(200).send("POST API is working. /api/auth/sign-in");
-// });
-app.post("/api/auth/sign-in3", (req, res) => {
-  res.status(200).send("POST API is working. /api/auth/sign-in3");
-});
 
 // Routes
 const authRoutes = require("./routes/Auth");

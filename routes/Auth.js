@@ -31,45 +31,28 @@ router.post("/sign-up", async (req, res) => {
 });
 
 // Sign In
-const asyncHandler = (fn) => (req, res, next) =>
-  Promise.resolve(fn(req, res, next)).catch(next);
+router.post("/sign-in", async (req, res) => {
+  // Log client IP address
+  const clientIp = req.ip;
+  console.log("Client IP:", clientIp);
 
-// Usage
-router.post(
-  "/sign-in",
-  asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    console.log("4545");
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
-    User.findOne({ email })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({ message: "User not found3" });
-        }
-        // Other logic...
-      })
-      .catch((err) => {
-        console.error(err);
-        return res.status(500).json({ message: "Server error3" });
-      });
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  if (!isPasswordCorrect) {
+    return res.status(400).json({ message: "Invalid credentials" });
+  }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
-
-    return res.status(200).json({ token, user });
-  })
-);
+  return res.status(200).json({ token, user });
+});
 
 module.exports = router;
