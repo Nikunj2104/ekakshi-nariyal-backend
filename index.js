@@ -70,6 +70,7 @@ app.post("/api/auth/sign-in3", (req, res) => {
 
 // Routes
 const authRoutes = require("./routes/Auth");
+const User = require("./models/User");
 app.use("/api/auth", authRoutes);
 
 // Start Server
