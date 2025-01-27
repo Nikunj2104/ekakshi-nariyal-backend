@@ -40,6 +40,20 @@ router.post(
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
+    console.log("4545");
+
+    User.findOne({ email })
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ message: "User not found3" });
+        }
+        // Other logic...
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ message: "Server error3" });
+      });
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
