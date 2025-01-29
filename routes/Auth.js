@@ -32,10 +32,6 @@ router.post("/sign-up", async (req, res) => {
 
 // Sign In
 router.post("/sign-in", async (req, res) => {
-  // Log client IP address
-  const clientIp = req.ip;
-  console.log("Client IP:", clientIp);
-
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
