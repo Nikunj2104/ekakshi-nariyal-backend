@@ -24,7 +24,7 @@ exports.signUp = async (req, res) => {
     console.error("Error during sign up:", error);
     res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: "Something went wrong!", error: error.message });
   }
 };
 
@@ -52,6 +52,6 @@ exports.signIn = async (req, res) => {
     console.error("Error during sign in:", error);
     res
       .status(500)
-      .json({ message: "Something went wrong", error: error.message });
+      .json({ message: "Something went wrong!", error: error.message });
   }
 };

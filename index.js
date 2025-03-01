@@ -24,10 +24,7 @@ app.use(cors(corsOptions));
 const connectDB = async () => {
   try {
     const uri = process.env.MONGO_URI;
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(uri);
     console.log("MongoDB connected successfully.");
   } catch (error) {
     console.error("MongoDB connection error:", error.message);
@@ -36,20 +33,18 @@ const connectDB = async () => {
 };
 connectDB();
 
-// Default Route
+// Default Route with uptime
 app.get("/", (req, res) => {
-  res.status(200).send("API is working.");
+  const uptime = process.uptime();
+  const uptimeMessage = `API is working. Uptime: ${Math.floor(
+    uptime
+  )} seconds.`;
+  res.status(200).send(uptimeMessage);
 });
 
 // Routes
 const routes = require("./routes");
 app.use("/api", routes);
-
-// Error Handling Middleware (Optional)
-app.use((err, req, res, next) => {
-  console.error("Error:", err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
-});
 
 // Start Server
 const PORT = process.env.PORT || 5000;
